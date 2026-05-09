@@ -1,38 +1,69 @@
 import React, { useState } from 'react';
 import './App.css';
+import LoginPage from './components/LoginPage';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('home');
+  const [token, setToken] = useState(
+    localStorage.getItem('ibhp_token')
+  );
+
+  const handleLogin = (newToken) => {
+    localStorage.setItem('ibhp_token', newToken);
+    setToken(newToken);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('ibhp_token');
+    setToken(null);
+  };
+
+  if (!token) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
 
   return (
     <div className="app">
-      {/* Header */}
+      <Dashboard onLogout={handleLogout} />
+    </div>
+  );
+}
+
+function Dashboard({ onLogout }) {
+  const [activeTab, setActiveTab] = useState('home');
+
+  return (
+    <>
       <header className="header">
         <h1>🛡️ IBHP Platform</h1>
         <p>Intelligent Bug Hunting Platform</p>
+        <button
+          className="logout-btn"
+          onClick={onLogout}
+        >
+          Logout
+        </button>
       </header>
 
-      {/* Navigation */}
       <nav className="nav">
-        <button 
+        <button
           className={activeTab === 'home' ? 'active' : ''}
           onClick={() => setActiveTab('home')}
         >
           🏠 Home
         </button>
-        <button 
+        <button
           className={activeTab === 'device' ? 'active' : ''}
           onClick={() => setActiveTab('device')}
         >
           📱 Device Scan
         </button>
-        <button 
+        <button
           className={activeTab === 'app' ? 'active' : ''}
           onClick={() => setActiveTab('app')}
         >
           📦 App Scan
         </button>
-        <button 
+        <button
           className={activeTab === 'report' ? 'active' : ''}
           onClick={() => setActiveTab('report')}
         >
@@ -40,18 +71,16 @@ function App() {
         </button>
       </nav>
 
-      {/* Content */}
       <main className="content">
         {activeTab === 'home' && <HomePage />}
         {activeTab === 'device' && <DevicePage />}
         {activeTab === 'app' && <AppPage />}
         {activeTab === 'report' && <ReportPage />}
       </main>
-    </div>
+    </>
   );
 }
 
-// Home Page
 function HomePage() {
   return (
     <div className="page">
@@ -110,7 +139,6 @@ function HomePage() {
   );
 }
 
-// Device Scan Page
 function DevicePage() {
   const [scanning, setScanning] = useState(false);
   const [results, setResults] = useState(null);
@@ -143,9 +171,7 @@ function DevicePage() {
       </button>
 
       {error && (
-        <div className="error-box">
-          ❌ {error}
-        </div>
+        <div className="error-box">❌ {error}</div>
       )}
 
       {results && results.status === 'success' && (
@@ -166,12 +192,13 @@ function DevicePage() {
             ) : (
               results.device_vulnerabilities.map(
                 (issue, i) => (
-                <div key={i} className="issue-item">
-                  <p>🔴 {issue.name}</p>
-                  <p>Severity: {issue.severity}</p>
-                  <p>Fix: {issue.remediation}</p>
-                </div>
-              ))
+                  <div key={i} className="issue-item">
+                    <p>🔴 {issue.name}</p>
+                    <p>Severity: {issue.severity}</p>
+                    <p>Fix: {issue.remediation}</p>
+                  </div>
+                )
+              )
             )}
           </div>
         </div>
@@ -179,46 +206,31 @@ function DevicePage() {
     </div>
   );
 }
-// App Scan Page
+
 function AppPage() {
   const [scanning, setScanning] = useState(false);
   const [results, setResults] = useState(null);
+  const [error, setError] = useState(null);
 
-  const startScan = () => {
+  const startScan = async () => {
     setScanning(true);
-    setTimeout(() => {
-      setResults({
-        appInfo: {
-          name: 'DIVA App',
-          package: 'jakhar.aseem.diva',
-          version: '1.0'
-        },
-        issues: [
-          {
-            name: 'Debuggable App',
-            severity: 'HIGH',
-            fix: 'Debug OFF Karo'
-          },
-          {
-            name: 'Backup Allowed',
-            severity: 'MEDIUM',
-            fix: 'allowBackup=false Karo'
-          },
-          {
-            name: 'Hardcoded Passwords',
-            severity: 'CRITICAL',
-            fix: 'Secrets Remove Karo'
-          }
-        ]
-      });
-      setScanning(false);
-    }, 2000);
+    setError(null);
+    try {
+      const response = await fetch(
+        'http://localhost:8000/api/app-scan'
+      );
+      const data = await response.json();
+      setResults(data);
+    } catch (err) {
+      setError('Server Se Connect Nahi Ho Paya!');
+    }
+    setScanning(false);
   };
 
   return (
     <div className="page">
       <h2>📦 App Scanner</h2>
-      <button 
+      <button
         className="scan-btn"
         onClick={startScan}
         disabled={scanning}
@@ -226,23 +238,34 @@ function AppPage() {
         {scanning ? '⏳ Scanning...' : '🔍 Scan APK'}
       </button>
 
-      {results && (
+      {error && (
+        <div className="error-box">❌ {error}</div>
+      )}
+
+      {results && results.status === 'success' && (
         <div>
-          <div className="info-box">
-            <h3>📱 App Info:</h3>
-            <p>Name: {results.appInfo.name}</p>
-            <p>Package: {results.appInfo.package}</p>
-            <p>Version: {results.appInfo.version}</p>
+          <div className="results-box danger">
+            <h3>⚠️ Vulnerabilities:</h3>
+            {results.vulnerabilities.length === 0 ? (
+              <p>🎉 No Issues Found!</p>
+            ) : (
+              results.vulnerabilities.map((issue, i) => (
+                <div key={i} className="issue-item">
+                  <p>🔴 {issue.name}</p>
+                  <p>Severity: {issue.severity}</p>
+                  <p>Issue: {issue.description}</p>
+                  <p>Fix: {issue.remediation}</p>
+                </div>
+              ))
+            )}
           </div>
 
-          <div className="results-box danger">
-            <h3>⚠️ Issues Found:</h3>
-            {results.issues.map((issue, i) => (
-              <div key={i} className="issue-item">
-                <p>🔴 {issue.name}</p>
-                <p>Severity: {issue.severity}</p>
-                <p>Fix: {issue.fix}</p>
-              </div>
+          <div className="results-box">
+            <h3>✅ Secure Items:</h3>
+            {results.safe.map((item, i) => (
+              <p key={i} className="secure-item">
+                ✅ {item.name}: {item.status}
+              </p>
             ))}
           </div>
         </div>
@@ -251,30 +274,78 @@ function AppPage() {
   );
 }
 
-// Report Page
 function ReportPage() {
+  const [loading, setLoading] = useState(false);
+  const [report, setReport] = useState(null);
+
+  const generateReport = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        'http://localhost:8000/api/full-scan'
+      );
+      const data = await response.json();
+      setReport(data);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="page">
       <h2>📊 Security Reports</h2>
-      <div className="report-box">
-        <h3>🔴 CRITICAL RISK</h3>
-        <p>Date: 2026-05-09</p>
-        <p>Total Issues: 7</p>
-        <div className="report-summary">
-          <span className="badge critical">
-            Critical: 3
-          </span>
-          <span className="badge high">
-            High: 1
-          </span>
-          <span className="badge medium">
-            Medium: 3
-          </span>
+      <button
+        className="scan-btn"
+        onClick={generateReport}
+        disabled={loading}
+      >
+        {loading ? '⏳ Generating...' : '📊 Generate Report'}
+      </button>
+
+      {report && report.status === 'success' && (
+        <div className="report-box">
+          <h3>🔴 Security Report</h3>
+          <div className="report-summary">
+            <span className="badge critical">
+              Critical: {report.summary.critical}
+            </span>
+            <span className="badge high">
+              High: {report.summary.high}
+            </span>
+            <span className="badge medium">
+              Medium: {report.summary.medium}
+            </span>
+          </div>
+
+          <div className="results-box danger">
+            <h3>⚠️ All Issues:</h3>
+            {report.app_vulnerabilities.map(
+              (issue, i) => (
+                <div key={i} className="issue-item">
+                  <p>🔴 {issue.name}</p>
+                  <p>Severity: {issue.severity}</p>
+                  <p>Fix: {issue.remediation}</p>
+                </div>
+              )
+            )}
+          </div>
+
+          {report.ai_analysis && (
+            <div className="results-box">
+              <h3>🤖 AI Analysis:</h3>
+              {report.ai_analysis.map((item, i) => (
+                <div key={i} className="issue-item">
+                  <p>🔴 {item.vulnerability.name}</p>
+                  <pre className="ai-text">
+                    {item.ai_analysis}
+                  </pre>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        <button className="download-btn">
-          📥 Download Report
-        </button>
-      </div>
+      )}
     </div>
   );
 }
