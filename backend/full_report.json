@@ -1,0 +1,104 @@
+{
+    "title": "IBHP Security Report",
+    "date": "2026-05-09 17:50:31",
+    "device_info": {},
+    "app_info": {
+        "name": "Scanned App"
+    },
+    "device_vulnerabilities": [],
+    "app_vulnerabilities": [
+        {
+            "id": "APP001",
+            "name": "Debuggable App",
+            "severity": "HIGH",
+            "description": "App Debug Mode Mein Hai",
+            "remediation": "Production Mein Debug OFF Karo"
+        },
+        {
+            "id": "APP002",
+            "name": "Backup Allowed",
+            "severity": "MEDIUM",
+            "description": "App Ka Backup Allow Hai",
+            "remediation": "allowBackup=false Karo"
+        },
+        {
+            "id": "APP006",
+            "name": "Low Min SDK",
+            "severity": "MEDIUM",
+            "description": "Min SDK 15 Bohat Purana Hai",
+            "remediation": "Min SDK 21+ Rakhein"
+        },
+        {
+            "id": "APP007",
+            "name": "Old Target SDK",
+            "severity": "MEDIUM",
+            "description": "Target SDK 23 Purana Hai",
+            "remediation": "Target SDK 33+ Rakhein"
+        },
+        {
+            "id": "APP004",
+            "name": "Hardcoded PASSWORD",
+            "severity": "CRITICAL",
+            "description": "10 Hardcoded password Mile",
+            "remediation": "Secrets Ko Code Mein Mat Rakho"
+        },
+        {
+            "id": "APP004",
+            "name": "Hardcoded SECRET",
+            "severity": "CRITICAL",
+            "description": "2 Hardcoded secret Mile",
+            "remediation": "Secrets Ko Code Mein Mat Rakho"
+        },
+        {
+            "id": "APP004",
+            "name": "Hardcoded TOKEN",
+            "severity": "CRITICAL",
+            "description": "27 Hardcoded token Mile",
+            "remediation": "Secrets Ko Code Mein Mat Rakho"
+        }
+    ],
+    "summary": {
+        "total_issues": 7,
+        "critical": 3,
+        "high": 1,
+        "medium": 3,
+        "low": 0,
+        "risk_level": "🔴 CRITICAL RISK"
+    },
+    "device_safe": [
+        {
+            "name": "Bootloader",
+            "status": "SECURE - Locked"
+        },
+        {
+            "name": "SELinux",
+            "status": "SECURE - Enforcing"
+        },
+        {
+            "name": "Encryption",
+            "status": "SECURE - Encrypted"
+        },
+        {
+            "name": "Security Patch",
+            "status": "Patch Level: "
+        },
+        {
+            "name": "USB Debugging",
+            "status": "SECURE - Disabled"
+        },
+        {
+            "name": "Bluetooth",
+            "status": "SECURE - Disabled"
+        },
+        {
+            "name": "NFC",
+            "status": "SECURE - Disabled"
+        }
+    ],
+    "app_safe": [
+        {
+            "name": "Exported Components",
+            "status": "SECURE"
+        }
+    ]
+}
