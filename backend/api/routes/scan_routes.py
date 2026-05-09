@@ -1,6 +1,31 @@
 from fastapi import APIRouter
 import sys
 import os
+@router.get("/dynamic-scan")
+def dynamic_scan():
+    try:
+        sys.path.append(
+            os.path.join(
+                os.path.dirname(__file__),
+                '..', '..', 'modules', 'device'
+            )
+        )
+        from dynamic_analyzer import DynamicAnalyzer
+        
+        analyzer = DynamicAnalyzer()
+        results = analyzer.run_dynamic_analysis(
+            'jakhar.aseem.diva'
+        )
+        
+        return {
+            "status": "success",
+            "dynamic_results": results
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
 # Path Fix
 sys.path.append(
@@ -233,3 +258,4 @@ def full_scan():
             "status": "error",
             "message": str(e)
         }
+    

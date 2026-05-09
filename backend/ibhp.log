@@ -10,3 +10,9 @@ Traceback (most recent call last):
     version = _bcrypt.__about__.__version__
               ^^^^^^^^^^^^^^^^^
 AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-05-09 22:25:01,845 - INFO - setup plugin alembic.autogenerate.schemas
+2026-05-09 22:25:01,845 - INFO - setup plugin alembic.autogenerate.tables
+2026-05-09 22:25:01,846 - INFO - setup plugin alembic.autogenerate.types
+2026-05-09 22:25:01,846 - INFO - setup plugin alembic.autogenerate.constraints
+2026-05-09 22:25:01,846 - INFO - setup plugin alembic.autogenerate.defaults
+2026-05-09 22:25:01,846 - INFO - setup plugin alembic.autogenerate.comments
