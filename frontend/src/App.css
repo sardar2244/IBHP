@@ -1,38 +1,197 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.app {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background: #1a1a2e;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.header {
+  background: #16213e;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #0f3460;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header h1 {
+  font-size: 2rem;
+  color: #e94560;
+}
+
+.header p {
+  color: #a8a8b3;
+}
+
+.nav {
+  display: flex;
+  background: #16213e;
+  padding: 10px;
+  gap: 10px;
+  justify-content: center;
+}
+
+.nav button {
+  padding: 10px 20px;
+  background: #0f3460;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav button.active {
+  background: #e94560;
+}
+
+.content {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page h2 {
+  margin-bottom: 20px;
+  color: #e94560;
+  font-size: 1.5rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.card.critical { background: #c0392b; }
+.card.high { background: #e67e22; }
+.card.medium { background: #f39c12; }
+.card.secure { background: #27ae60; }
+
+.card .number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.info-box {
+  background: #16213e;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.info-box h3 {
+  color: #e94560;
+  margin-bottom: 15px;
+}
+
+.info-box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-box table td {
+  padding: 8px;
+  border-bottom: 1px solid #0f3460;
+}
+
+.scan-btn {
+  padding: 15px 30px;
+  background: #e94560;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.scan-btn:disabled {
+  background: #666;
+}
+
+.results-box {
+  background: #16213e;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.results-box.danger {
+  border-left: 4px solid #e94560;
+}
+
+.results-box h3 {
+  color: #e94560;
+  margin-bottom: 15px;
+}
+
+.secure-item {
+  color: #27ae60;
+  padding: 5px 0;
+}
+
+.issue-item {
+  background: #0f3460;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.report-box {
+  background: #16213e;
+  padding: 25px;
+  border-radius: 10px;
+  border-left: 4px solid #e94560;
+}
+
+.report-box h3 {
+  color: #e94560;
+  margin-bottom: 10px;
+}
+
+.report-summary {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.badge {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.badge.critical { background: #c0392b; }
+.badge.high { background: #e67e22; }
+.badge.medium { background: #f39c12; }
+
+.download-btn {
+  padding: 10px 25px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+.error-box {
+  background: #c0392b;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  color: white;
 }
