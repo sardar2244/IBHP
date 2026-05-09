@@ -1,6 +1,30 @@
 from fastapi import APIRouter
 import sys
 import os
+@router.get("/exploit-scan/{package}")
+def exploit_scan(package: str):
+    try:
+        sys.path.append(
+            os.path.join(
+                os.path.dirname(__file__),
+                '..', '..', 'modules', 'exploit'
+            )
+        )
+        from exploit_engine import ExploitEngine
+        
+        engine = ExploitEngine()
+        results = engine.run_all_exploits(package)
+        
+        return {
+            "status": "success",
+            "package": package,
+            "exploit_results": results
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 @router.get("/dynamic-scan")
 def dynamic_scan():
     try:
