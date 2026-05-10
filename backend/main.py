@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routes.scan_routes import router as scan_router
-from api.routes.auth_routes import router as auth_router
 import logging
+import sys
+import os
 
 # Logging Setup
 logging.basicConfig(
@@ -13,11 +13,12 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="IBHP Platform",
     description="Intelligent Bug Hunting Platform",
-    version="2.0.0"
+    version="4.0.0"
 )
 
 app.add_middleware(
@@ -27,19 +28,33 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-app.include_router(
-    scan_router,
-    prefix="/api"
-)
-app.include_router(
-    auth_router,
-    prefix="/auth"
-)
+# Routes Import
+try:
+    from api.routes.scan_routes import router as scan_router
+    app.include_router(scan_router, prefix="/api")
+    logger.info("✅ Scan Routes Loaded!")
+except Exception as e:
+    logger.error(f"❌ Scan Routes Error: {e}")
+
+try:
+    from api.routes.auth_routes import router as auth_router
+    app.include_router(auth_router, prefix="/auth")
+    logger.info("✅ Auth Routes Loaded!")
+except Exception as e:
+    logger.error(f"❌ Auth Routes Error: {e}")
 
 @app.get("/")
 def home():
+    logger.info("Home Called")
     return {
         "name": "IBHP Platform",
         "status": "Running",
-        "version": "2.0.0"
+        "version": "4.0.0"
+    }
+
+@app.get("/health")
+def health():
+    return {
+        "status": "OK",
+        "message": "Server Running!"
     }

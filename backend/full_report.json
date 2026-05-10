@@ -1,11 +1,19 @@
 {
     "title": "IBHP Security Report",
-    "date": "2026-05-09 17:50:31",
+    "date": "2026-05-10 14:00:35",
     "device_info": {},
     "app_info": {
         "name": "Scanned App"
     },
-    "device_vulnerabilities": [],
+    "device_vulnerabilities": [
+        {
+            "id": "FW004",
+            "name": "USB Debugging ON",
+            "severity": "MEDIUM",
+            "description": "USB Debugging Enabled Hai",
+            "remediation": "USB Debugging Disable Karo"
+        }
+    ],
     "app_vulnerabilities": [
         {
             "id": "APP001",
@@ -58,10 +66,10 @@
         }
     ],
     "summary": {
-        "total_issues": 7,
+        "total_issues": 8,
         "critical": 3,
         "high": 1,
-        "medium": 3,
+        "medium": 4,
         "low": 0,
         "risk_level": "🔴 CRITICAL RISK"
     },
@@ -80,11 +88,7 @@
         },
         {
             "name": "Security Patch",
-            "status": "Patch Level: "
-        },
-        {
-            "name": "USB Debugging",
-            "status": "SECURE - Disabled"
+            "status": "Patch Level: 2026-02-05"
         },
         {
             "name": "Bluetooth",
@@ -93,6 +97,10 @@
         {
             "name": "NFC",
             "status": "SECURE - Disabled"
+        },
+        {
+            "name": "Airplane Mode",
+            "status": "Normal - OFF"
         }
     ],
     "app_safe": [
